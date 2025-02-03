@@ -169,7 +169,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-# poetry.lock
+poetry.lock
 # /project_1444/static/
 # /project_1444/dump.rdb
 # /project_1444/schema.yml
