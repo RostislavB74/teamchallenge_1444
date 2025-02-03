@@ -27,7 +27,7 @@ def generate_sku():
 class Product(models.Model):
     sku = models.CharField(max_length=10, unique=True, default=generate_sku, editable=False)
     article = models.CharField(max_length=50, null=True, blank=True)  # Optional field
-    type_of_jewelry = ForeignKey('Category_of_jewelry', on_delete=models.PROTECT, null=True, blank=True, related_name='products')  # Optional field.CharField(max_length=100)
+    type_of_jewelry = ForeignKey('Category_of_jewelry', on_delete=models.PROTECT, null=True, blank=True, related_name='category_of_jewelry')  # Optional field.CharField(max_length=100)
     intended_to = ForeignKey('Intended_to', on_delete=models.PROTECT, null=True, blank=True, related_name='gender')
     product_type = models.CharField(max_length=100,null=True, blank=True)
     subtype = models.CharField(max_length=100, null=True, blank=True)  # Optional field
@@ -37,7 +37,7 @@ class Product(models.Model):
     carat = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)  # Optional field
     metal_color = models.CharField(max_length=100, null=True, blank=True)
     material_color =models.CharField(max_length=100, null=True, blank=True)
-    stone = models.CharField(max_length=50, null=True, blank=True)  # Optional field
+    stone = ForeignKey('Stones', on_delete=models.PROTECT, null=True, blank=True, related_name='stones')
     stone_color = models.CharField(max_length=50, null=True, blank=True)  # Optional field
     inlay = models.CharField(max_length=50, null=True, blank=True)  # Optional field
     inlay_characteristics = models.TextField(null=True, blank=True)  # Optional field
@@ -59,8 +59,8 @@ class Product(models.Model):
     ean_13 = models.CharField(max_length=13, null=True, blank=True)  # Optional field for EAN-13
     qr_code = models.CharField(max_length=100, null=True, blank=True)  # Optional field
     description = models.TextField(blank=True)
-    time_create = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    time_update = models.DateTimeField(auto_now=True, null=True, blank=True)
+    time_create = models.DateTimeField(auto_now_add=False, null=True, blank=True)
+    time_update = models.DateTimeField(auto_now=False, null=True, blank=True)
     author = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.PROTECT, null=True, blank=True)
     def __str__(self):
         return f"{self.sku} - {self.product_type}"
@@ -71,37 +71,66 @@ class ProductImage(models.Model):
 
 class Category_of_jewelry(models.Model):
     name = models.CharField(max_length=100)
-
+    class Meta:
+     verbose_name_plural = "Category of jewelry" 
     def __str__(self):
         return self.name
-    
-class Categories_of_precious_stones(models.Model):
+class Types_of_stones(models.Model):
     name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name_plural = "Type of stones" 
+    def __str__(self):
+        return self.name
+
+class Stones_base(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name_plural = "Stones base" 
+    def __str__(self):
+        return self.name
+class Categories_of_stones(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+     verbose_name_plural = "Category of stones" 
 
     def __str__(self):
         return self.name
 
 class Categories_of_metal(models.Model):
     name = models.CharField(max_length=100)
+    class Meta:
+     verbose_name_plural = "Category of metal" 
 
     def __str__(self):
         return self.name
 
 class Categories_of_materials(models.Model):
     name = models.CharField(max_length=100) 
+    class Meta:
+     verbose_name_plural = "Category of materials" 
 
     def __str__(self):  
         return self.name
 
-class Precious_stones(models.Model):
+class Stones(models.Model):
     name = models.CharField(max_length=100)
-    category = models.ForeignKey(Categories_of_precious_stones, on_delete=models.CASCADE, related_name='stones')
+    type_of_stone = models.ForeignKey(Types_of_stones, on_delete=models.PROTECT, related_name='type_of_stones', null=True, blank=True)
+    base_of_stone = models.ForeignKey(Stones_base, on_delete=models.PROTECT, related_name='base_of_stones', null=True, blank=True)
+    category = models.ForeignKey(Categories_of_stones, on_delete=models.PROTECT, related_name='categories_of_stones',   null=True, blank=True)
+
+    class Meta:
+     verbose_name_plural = "Stones" 
 
     def __str__(self):
         return self.name
 class Intended_to(models.Model):
     name = models.CharField(max_length=100)
+    class Meta:
+        verbose_name_plural = "Intended to" 
 
     def __str__(self):
         return self.name
 
+
+    def __str__(self):
+        return self.name
