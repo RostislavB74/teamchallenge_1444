@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'rest_framework.authtoken',
-
+    'rest_framework_simplejwt',
+    # 'django-model-utils',
+    'treebeard',
     # 'users',
     'storage',
     'product',
